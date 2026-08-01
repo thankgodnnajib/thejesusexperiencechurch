@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<meta name="design_doc_mode" content="canvas">
+<style>
+  *{box-sizing:border-box}
+  button{font-family:inherit;border:none;background:none;cursor:pointer}
+  input{font-family:inherit}
+  ::-webkit-scrollbar{width:0;height:0}
+  @keyframes jxUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .jxscreen{animation:jxUp .32s ease both}
+</style>
+</helmet>
+
+<!-- ============ MOBILE APP FRAME ============ -->
+<div style="position:absolute;left:60px;top:48px;width:402px">
+  <div data-drags-parent="1" data-screen-label="Mobile app" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.16em;color:#6b6358;text-transform:uppercase;margin-bottom:14px">The Jesus Experience — Mobile Giving App</div>
+  <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+    <div style="display:flex;flex-direction:column;height:100%;background:#f3eee4;font-family:'Newsreader',Georgia,serif;color:#1b1916">
+
+      <!-- header -->
+      <div style="padding:58px 20px 12px;background:#f3eee4;flex-shrink:0">
+        <img src="assets/logo.png" style="height:19px;display:block" alt="The Jesus Experience Church">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px">
+          <h1 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.02em;line-height:1">{{ mHeaderTitle }}</h1>
+          <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#8c8275;text-align:right;max-width:140px">{{ mHeaderSub }}</div>
+        </div>
+        <sc-if value="{{ giveFlow }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;gap:6px;margin-top:14px">
+            <div style="{{ dot1 }}"></div><div style="{{ dot2 }}"></div><div style="{{ dot3 }}"></div>
+          </div>
+        </sc-if>
+      </div>
+
+      <!-- scroll content -->
+      <div style="flex:1;overflow:auto;padding:4px 20px 20px">
+
+        <!-- ===== GIVE · STEP 1 ===== -->
+        <sc-if value="{{ gStep1 }}" hint-placeholder-val="{{ true }}">
+          <div class="jxscreen">
+            <!-- goal card -->
+            <div style="background:#1b1916;color:#f3eee4;border-radius:20px;padding:18px;position:relative;overflow:hidden">
+              <div style="position:absolute;inset:0;background:radial-gradient(120% 100% at 85% 0%,rgba(176,136,58,0.22),transparent 60%)"></div>
+              <div style="position:relative">
+                <div style="font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:0.2em;color:#b0883a">CURRENT CAMPAIGN</div>
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:19px;margin-top:5px">{{ campaign }}</div>
+                <sc-if value="{{ showRaised }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:14px">
+                    <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:22px">{{ goalRaisedStr }}</div>
+                    <div style="font-family:'Space Mono',monospace;font-size:10px;color:#9a9082">of {{ goalTargetStr }}</div>
+                  </div>
+                </sc-if>
+                <div style="height:7px;border-radius:99px;background:rgba(243,238,228,0.16);margin-top:8px;overflow:hidden">
+                  <div style="height:100%;width:{{ goalPct }}%;background:#b5342a;border-radius:99px"></div>
+                </div>
+                <div style="font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:0.06em;color:#b0883a;margin-top:8px">{{ goalPct }}% RAISED · {{ goalDonors }} GIVERS</div>
+              </div>
+            </div>
+
+            <!-- fund -->
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#80591a;margin:22px 0 11px">Choose a fund</div>
+            <div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px">
+              <sc-for list="{{ mFunds }}" as="f" hint-placeholder-count="4">
+                <div onClick="{{ f.onClick }}" style="{{ f.style }}">
+                  <div style="{{ f.nameStyle }}">{{ f.name }}</div>
+                  <div style="{{ f.descStyle }}">{{ f.desc }}</div>
+                </div>
+              </sc-for>
+            </div>
+
+            <!-- amount -->
+            <div style="text-align:center;margin-top:26px">
+              <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#80591a">Amount (CAD)</div>
+              <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:58px;letter-spacing:-0.03em;line-height:1.05;margin-top:6px">{{ mAmountBig }}</div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:14px">
+              <sc-for list="{{ mPresets }}" as="p" hint-placeholder-count="4">
+                <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.label }}</button>
+              </sc-for>
+            </div>
+
+            <!-- keypad -->
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px">
+              <sc-for list="{{ keys }}" as="k" hint-placeholder-count="12">
+                <button onClick="{{ k.on }}" style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:24px;color:#1b1916;background:#fffdf8;border:1px solid rgba(27,25,22,0.08);border-radius:14px;height:50px">{{ k.label }}</button>
+              </sc-for>
+            </div>
+
+            <!-- frequency -->
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:#80591a;margin:22px 0 10px">Frequency</div>
+            <div style="display:flex;gap:4px;background:#e9e2d4;border-radius:13px;padding:4px">
+              <sc-for list="{{ mFreqs }}" as="q" hint-placeholder-count="4">
+                <button onClick="{{ q.onClick }}" style="{{ q.style }}">{{ q.label }}</button>
+              </sc-for>
+            </div>
+
+            <button onClick="{{ mNext }}" style="width:100%;margin-top:22px;background:#b5342a;color:#f3eee4;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.04em;padding:17px;border-radius:15px;font-weight:700">CONTINUE → {{ mGiveSummary }}</button>
+          </div>
+        </sc-if>
+
+        <!-- ===== GIVE · STEP 2 — PAYMENT METHOD ===== -->
+        <sc-if value="{{ gStep2 }}" hint-placeholder-val="{{ false }}">
+          <div class="jxscreen">
+            <div style="font-family:'Newsreader',serif;font-size:16px;color:#6b6358;margin-bottom:4px">Giving <strong style="color:#1b1916">{{ mGiveSummary }}</strong></div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:18px 0 12px">How would you like to pay?</div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ mMethods }}" as="m" hint-placeholder-count="5">
+                <div onClick="{{ m.onClick }}" style="{{ m.cardStyle }}">
+                  <div style="{{ m.badgeStyle }}">{{ m.badge }}</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px">{{ m.name }}</div>
+                    <div style="font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:0.03em;color:#8c8275;margin-top:2px">{{ m.sub }}</div>
+                  </div>
+                  <div style="{{ m.radioStyle }}"><sc-if value="{{ m.selected }}" hint-placeholder-val="{{ false }}"><div style="width:10px;height:10px;border-radius:99px;background:#b5342a"></div></sc-if></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:22px">
+              <button onClick="{{ mBack }}" style="flex-shrink:0;background:transparent;border:1px solid rgba(27,25,22,0.2);color:#1b1916;font-family:'Space Mono',monospace;font-size:13px;padding:17px 22px;border-radius:15px">BACK</button>
+              <button onClick="{{ mNext }}" style="flex:1;background:#b5342a;color:#f3eee4;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.04em;padding:17px;border-radius:15px;font-weight:700">REVIEW</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ===== GIVE · STEP 3 — REVIEW ===== -->
+        <sc-if value="{{ gStep3 }}" hint-placeholder-val="{{ false }}">
+          <div class="jxscreen">
+            <div style="background:#fffdf8;border:1px solid rgba(27,25,22,0.1);border-radius:20px;padding:20px">
+              <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(27,25,22,0.08)">
+                <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.04em;color:#8c8275;text-transform:uppercase">Fund</span>
+                <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px">{{ mFundName }}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(27,25,22,0.08)">
+                <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.04em;color:#8c8275;text-transform:uppercase">Frequency</span>
+                <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px">{{ mFreqLabel }}</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(27,25,22,0.08)">
+                <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.04em;color:#8c8275;text-transform:uppercase">Method</span>
+                <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px">{{ mMethodName }}</span>
+              </div>
+              <div onClick="{{ toggleMCover }}" style="display:flex;justify-content:space-between;align-items:center;padding:13px 0 4px;cursor:pointer">
+                <div style="max-width:62%">
+                  <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:14px">Cover transaction fee</div>
+                  <div style="font-family:'Space Mono',monospace;font-size:9.5px;color:#8c8275;margin-top:2px">Add {{ mFeeStr }} so 100% reaches the church</div>
+                </div>
+                <div style="{{ mCoverTrack }}"><div style="{{ mCoverKnob }}"></div></div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:18px;padding:0 4px">
+              <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:#80591a">Total {{ mFreqNote }}</span>
+              <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:34px;letter-spacing:-0.02em">{{ mTotalStr }}</span>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:20px">
+              <button onClick="{{ mBack }}" style="flex-shrink:0;background:transparent;border:1px solid rgba(27,25,22,0.2);color:#1b1916;font-family:'Space Mono',monospace;font-size:13px;padding:17px 22px;border-radius:15px">BACK</button>
+              <button onClick="{{ mGive }}" style="flex:1;background:#1b1916;color:#f3eee4;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.04em;padding:17px;border-radius:15px;font-weight:700">GIVE {{ mTotalStr }}</button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:14px;font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:0.06em;color:#8c8275">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8c8275" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              SECURED · 256-BIT ENCRYPTION
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ===== GIVE · SUCCESS ===== -->
+        <sc-if value="{{ gDone }}" hint-placeholder-val="{{ false }}">
+          <div class="jxscreen" style="text-align:center;padding-top:18px">
+            <div style="width:84px;height:84px;border-radius:99px;background:#1b1916;display:flex;align-items:center;justify-content:center;margin:0 auto">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#b0883a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:28px;letter-spacing:-0.02em;margin-top:20px">Thank you</h2>
+            <p style="font-family:'Newsreader',serif;font-style:italic;font-size:17px;color:#6b6358;margin-top:6px;line-height:1.4">&ldquo;Each one should give what they have decided in their heart to give &mdash; for God loves a cheerful giver.&rdquo;</p>
+            <div style="background:#fffdf8;border:1px solid rgba(27,25,22,0.1);border-radius:18px;padding:18px;margin-top:22px;text-align:left">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px">{{ mTotalStr }}</span>
+                <span style="font-family:'Space Mono',monospace;font-size:10px;color:#8c8275">{{ mReceiptId }}</span>
+              </div>
+              <div style="font-family:'Newsreader',serif;font-size:15px;color:#6b6358;margin-top:6px">{{ mFundName }} · {{ mFreqLabel }} · {{ mMethodName }}</div>
+              <div style="font-family:'Space Mono',monospace;font-size:9.5px;color:#8c8275;margin-top:8px;padding-top:10px;border-top:1px solid rgba(27,25,22,0.08)">Receipt emailed · Tax-deductible in Canada</div>
+            </div>
+            <sc-if value="{{ mIsRecurring }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;gap:9px;align-items:center;background:rgba(176,136,58,0.14);border-radius:13px;padding:12px 14px;margin-top:12px;text-align:left">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#80591a" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.02em;color:#80591a">Next gift scheduled for {{ mNextDate }}</span>
+              </div>
+            </sc-if>
+            <button onClick="{{ mReset }}" style="width:100%;margin-top:20px;background:#b5342a;color:#f3eee4;font-family:'Space Mono',monospace;font-size:13px;letter-spacing:0.04em;padding:16px;border-radius:15px;font-weight:700">DONE</button>
+          </div>
+        </sc-if>
+
+        <!-- ===== SCHEDULE TAB ===== -->
+        <sc-if value="{{ isSchedule }}" hint-placeholder-val="{{ false }}">
+          <div class="jxscreen">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:6px 0 11px">Active recurring gift</div>
+            <div style="background:#1b1916;color:#f3eee4;border-radius:20px;padding:18px">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start">
+                <div>
+                  <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:26px">$100<span style="font-size:14px;font-weight:500;color:#9a9082">/mo</span></div>
+                  <div style="font-family:'Newsreader',serif;font-size:15px;color:#d8d0c2;margin-top:2px">Tithe &amp; Offering</div>
+                </div>
+                <div style="{{ recurPillStyle }}">{{ recurStatus }}</div>
+              </div>
+              <div style="display:flex;gap:7px;align-items:center;margin-top:14px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.04em;color:#b0883a">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#b0883a" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                NEXT · {{ recurNext }} · INTERAC
+              </div>
+              <div style="display:flex;gap:8px;margin-top:16px">
+                <button onClick="{{ toggleRecur }}" style="flex:1;background:rgba(243,238,228,0.1);color:#f3eee4;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.04em;padding:11px;border-radius:11px">{{ recurAction }}</button>
+                <button onClick="{{ goGive }}" style="flex:1;background:rgba(243,238,228,0.1);color:#f3eee4;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.04em;padding:11px;border-radius:11px">EDIT</button>
+              </div>
+            </div>
+
+            <button onClick="{{ goGive }}" style="width:100%;margin-top:14px;background:transparent;border:1.5px dashed rgba(27,25,22,0.25);color:#80591a;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.04em;padding:15px;border-radius:16px;display:flex;align-items:center;justify-content:center;gap:8px">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#80591a" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg> SET UP A NEW SCHEDULE
+            </button>
+
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:26px 0 8px">Reminders</div>
+            <div style="background:#fffdf8;border:1px solid rgba(27,25,22,0.1);border-radius:18px;overflow:hidden">
+              <sc-for list="{{ reminders }}" as="r" hint-placeholder-count="4">
+                <div onClick="{{ r.toggle }}" style="{{ r.rowStyle }}">
+                  <div style="flex:1">
+                    <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:14.5px">{{ r.label }}</div>
+                    <div style="font-family:'Space Mono',monospace;font-size:9.5px;color:#8c8275;margin-top:2px">{{ r.sub }}</div>
+                  </div>
+                  <div style="{{ r.trackStyle }}"><div style="{{ r.knobStyle }}"></div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ===== ACTIVITY TAB ===== -->
+        <sc-if value="{{ isActivity }}" hint-placeholder-val="{{ false }}">
+          <div class="jxscreen">
+            <div style="background:#fffdf8;border:1px solid rgba(27,25,22,0.1);border-radius:20px;padding:18px;display:flex;justify-content:space-between;align-items:flex-end">
+              <div>
+                <div style="font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a">Given in 2026</div>
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:34px;letter-spacing:-0.02em;margin-top:4px">$1,725</div>
+              </div>
+              <div style="font-family:'Space Mono',monospace;font-size:9.5px;color:#8c8275;text-align:right;line-height:1.6">12 GIFTS<br>TAX-DEDUCTIBLE</div>
+            </div>
+
+            <button style="width:100%;margin-top:12px;background:#1b1916;color:#f3eee4;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.06em;padding:13px;border-radius:13px;display:flex;align-items:center;justify-content:center;gap:8px">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b0883a" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg> DOWNLOAD 2025 TAX RECEIPT
+            </button>
+
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:24px 0 8px">Recent gifts</div>
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ txns }}" as="t" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:13px;padding:14px 2px;border-bottom:1px solid rgba(27,25,22,0.08)">
+                  <div style="width:38px;height:38px;border-radius:11px;background:#e9e2d4;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#80591a" stroke-width="2"><path d="M19 14c1.5-1.5 3-3.4 3-5.5a3.5 3.5 0 00-6.4-2A3.5 3.5 0 009.2 4 3.5 3.5 0 003 6.5c0 2.1 1.5 4 3 5.5l6 6z"/></svg>
+                  </div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px">{{ t.fund }}</div>
+                    <div style="font-family:'Space Mono',monospace;font-size:9.5px;color:#8c8275;margin-top:2px">{{ t.date }} · {{ t.method }}</div>
+                  </div>
+                  <div style="text-align:right">
+                    <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:16px">{{ t.amount }}</div>
+                    <div style="font-family:'Space Mono',monospace;font-size:8.5px;letter-spacing:0.06em;color:#3f7d52">✓ {{ t.status }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ===== PROFILE TAB ===== -->
+        <sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+          <div class="jxscreen">
+            <div style="display:flex;align-items:center;gap:14px">
+              <div style="width:60px;height:60px;border-radius:99px;background:#1b1916;color:#b0883a;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:24px">JD</div>
+              <div>
+                <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:21px;letter-spacing:-0.01em">Jane Doe</div>
+                <div style="font-family:'Space Mono',monospace;font-size:10px;color:#8c8275;margin-top:3px">MEMBER SINCE APR 2026</div>
+              </div>
+            </div>
+
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:24px 0 9px">Saved payment methods</div>
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{ saved }}" as="s" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:13px;background:#fffdf8;border:1px solid rgba(27,25,22,0.1);border-radius:14px;padding:13px 15px">
+                  <div style="{{ s.badgeStyle }}">{{ s.badge }}</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:14.5px">{{ s.name }}</div>
+                    <div style="font-family:'Space Mono',monospace;font-size:9.5px;color:#8c8275;margin-top:2px">{{ s.sub }}</div>
+                  </div>
+                  <sc-if value="{{ s.def }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Space Mono',monospace;font-size:8.5px;letter-spacing:0.06em;color:#b5342a;border:1px solid #b5342a;border-radius:99px;padding:3px 8px">DEFAULT</div></sc-if>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:24px 0 9px">Account</div>
+            <div style="background:#fffdf8;border:1px solid rgba(27,25,22,0.1);border-radius:16px;overflow:hidden">
+              <sc-for list="{{ menu }}" as="i" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 16px;border-bottom:1px solid rgba(27,25,22,0.07)">
+                  <span style="font-family:'Newsreader',serif;font-size:16px;color:{{ i.color }}">{{ i.label }}</span>
+                  <svg width="7" height="12" viewBox="0 0 8 14" fill="none" stroke="rgba(27,25,22,0.3)" stroke-width="2" stroke-linecap="round"><path d="M1 1l6 6-6 6"/></svg>
+                </div>
+              </sc-for>
+            </div>
+            <img src="assets/logo.png" style="height:16px;display:block;margin:28px auto 4px;opacity:0.5" alt="">
+            <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;color:#a89e90">TORONTO, CANADA · CRA REG. #847562910</div>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- bottom tab bar -->
+      <div style="flex-shrink:0;background:#fffdf8;border-top:1px solid rgba(27,25,22,0.1);display:flex;padding:9px 8px 26px">
+        <button onClick="{{ goGive }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navGive }}">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.5-1.5 3-3.4 3-5.5a3.5 3.5 0 00-6.4-2A3.5 3.5 0 009.2 4 3.5 3.5 0 003 6.5c0 2.1 1.5 4 3 5.5l6 6z"/></svg>
+          <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.04em">Give</span>
+        </button>
+        <button onClick="{{ goSchedule }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navSchedule }}">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.04em">Schedule</span>
+        </button>
+        <button onClick="{{ goActivity }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navActivity }}">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14l2 2 4-4"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg>
+          <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.04em">Activity</span>
+        </button>
+        <button onClick="{{ goProfile }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navProfile }}">
+          <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+          <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.04em">Profile</span>
+        </button>
+      </div>
+
+    </div>
+  </x-import>
+</div>
+
+<!-- ============ WEB GIVING PAGE FRAME ============ -->
+<div style="position:absolute;left:540px;top:48px;width:1200px">
+  <div data-drags-parent="1" data-screen-label="Web giving page" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.16em;color:#6b6358;text-transform:uppercase;margin-bottom:14px">The Jesus Experience — Web Giving Page</div>
+  <x-import component-from-global-scope="ChromeWindow" from="./browser-window.jsx" dc-props="{{ chromeProps }}" hint-size="1200px,760px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;height:760px;font-family:'Newsreader',Georgia,serif;color:#1b1916">
+
+      <!-- left dark panel -->
+      <div style="background:#1b1916;color:#f3eee4;padding:54px 56px;position:relative;overflow:hidden">
+        <div style="position:absolute;inset:0;background:radial-gradient(110% 80% at 90% 0%,rgba(176,136,58,0.2),transparent 55%)"></div>
+        <div style="position:relative;height:100%;display:flex;flex-direction:column">
+          <img src="assets/logo-light.png" style="height:30px;align-self:flex-start" alt="The Jesus Experience Church">
+          <div style="margin-top:auto">
+            <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.24em;color:#b0883a">GENEROSITY · WORSHIP · LEGACY</div>
+            <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:46px;line-height:1.0;letter-spacing:-0.03em;margin-top:16px;max-width:13ch">Your gift builds the house of God.</h2>
+            <p style="font-family:'Newsreader',serif;font-style:italic;font-size:19px;line-height:1.45;color:#d8d0c2;margin-top:18px;max-width:34ch">&ldquo;God loves a cheerful giver.&rdquo; — 2 Corinthians 9:7</p>
+
+            <div style="margin-top:34px;padding-top:24px;border-top:1px solid rgba(243,238,228,0.16)">
+              <div style="display:flex;justify-content:space-between;align-items:baseline">
+                <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.16em;color:#b0883a">{{ campaign }}</span>
+                <span style="font-family:'Space Mono',monospace;font-size:11px;color:#9a9082">{{ goalPct }}%</span>
+              </div>
+              <div style="height:8px;border-radius:99px;background:rgba(243,238,228,0.14);margin-top:10px;overflow:hidden">
+                <div style="height:100%;width:{{ goalPct }}%;background:#b5342a;border-radius:99px"></div>
+              </div>
+              <sc-if value="{{ showRaised }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;justify-content:space-between;margin-top:10px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:17px">
+                  <span>{{ goalRaisedStr }} raised</span><span style="color:#9a9082;font-weight:500">of {{ goalTargetStr }}</span>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- right form panel -->
+      <div style="background:#f3eee4;padding:48px 52px;overflow:auto">
+        <sc-if value="{{ wForm }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <h1 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:32px;letter-spacing:-0.02em">Give online</h1>
+            <p style="font-family:'Newsreader',serif;font-size:17px;color:#6b6358;margin-top:4px">Secure, tax-deductible, one-time or recurring.</p>
+
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:26px 0 10px">Fund</div>
+            <div style="display:flex;flex-wrap:wrap;gap:9px">
+              <sc-for list="{{ wFunds }}" as="f" hint-placeholder-count="4">
+                <div onClick="{{ f.onClick }}" style="{{ f.style }}"><div style="{{ f.nameStyle }}">{{ f.name }}</div><div style="{{ f.descStyle }}">{{ f.desc }}</div></div>
+              </sc-for>
+            </div>
+
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:24px 0 10px">Amount (CAD)</div>
+            <div style="display:flex;gap:9px;margin-bottom:11px">
+              <sc-for list="{{ wPresets }}" as="p" hint-placeholder-count="4">
+                <button onClick="{{ p.onClick }}" style="{{ p.style }}">{{ p.label }}</button>
+              </sc-for>
+            </div>
+            <div style="display:flex;align-items:center;background:#fffdf8;border:1.5px solid rgba(27,25,22,0.15);border-radius:14px;padding:0 18px">
+              <span style="font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px;color:#80591a">$</span>
+              <input value="{{ wAmount }}" onInput="{{ wSetAmount }}" inputmode="decimal" style="flex:1;border:none;outline:none;background:transparent;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:30px;color:#1b1916;padding:14px 8px;width:100%">
+            </div>
+
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:24px 0 10px">Frequency</div>
+            <div style="display:flex;gap:4px;background:#e9e2d4;border-radius:13px;padding:4px">
+              <sc-for list="{{ wFreqs }}" as="q" hint-placeholder-count="4">
+                <button onClick="{{ q.onClick }}" style="{{ q.style }}">{{ q.label }}</button>
+              </sc-for>
+            </div>
+
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:#80591a;margin:24px 0 10px">Payment method</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+              <sc-for list="{{ wMethods }}" as="m" hint-placeholder-count="5">
+                <div onClick="{{ m.onClick }}" style="{{ m.cardStyle }}">
+                  <div style="{{ m.badgeStyle }}">{{ m.badge }}</div>
+                  <div style="flex:1;min-width:0"><div style="font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:13.5px">{{ m.name }}</div><div style="font-family:'Space Mono',monospace;font-size:8.5px;color:#8c8275;margin-top:2px">{{ m.sub }}</div></div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div onClick="{{ toggleWCover }}" style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;cursor:pointer">
+              <span style="font-family:'Newsreader',serif;font-size:15px;color:#6b6358">Cover the {{ wFeeStr }} processing fee</span>
+              <div style="{{ wCoverTrack }}"><div style="{{ wCoverKnob }}"></div></div>
+            </div>
+
+            <button onClick="{{ wGive }}" style="width:100%;margin-top:22px;background:#b5342a;color:#f3eee4;font-family:'Space Mono',monospace;font-size:14px;letter-spacing:0.04em;padding:18px;border-radius:15px;font-weight:700">GIVE {{ wTotalStr }} {{ wFreqNote }}</button>
+            <div style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:14px;font-family:'Space Mono',monospace;font-size:9.5px;letter-spacing:0.06em;color:#8c8275">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#8c8275" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+              SECURED PAYMENTS · INTERAC · PAYPAL · STRIPE
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ wDone }}" hint-placeholder-val="{{ false }}">
+          <div style="height:100%;display:flex;flex-direction:column;justify-content:center;text-align:center" class="jxscreen">
+            <div style="width:88px;height:88px;border-radius:99px;background:#1b1916;display:flex;align-items:center;justify-content:center;margin:0 auto">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#b0883a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            </div>
+            <h2 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:34px;letter-spacing:-0.02em;margin-top:22px">Thank you for giving</h2>
+            <p style="font-family:'Newsreader',serif;font-style:italic;font-size:18px;color:#6b6358;margin-top:8px">Your {{ wTotalStr }} {{ wFreqNote }} gift to {{ wFundName }} is confirmed.</p>
+            <div style="background:#fffdf8;border:1px solid rgba(27,25,22,0.1);border-radius:16px;padding:18px 22px;margin:24px auto 0;max-width:340px;text-align:left">
+              <div style="display:flex;justify-content:space-between;font-family:'Space Mono',monospace;font-size:11px;color:#8c8275"><span>RECEIPT</span><span>{{ mReceiptId }}</span></div>
+              <div style="display:flex;justify-content:space-between;margin-top:9px;font-family:'Space Mono',monospace;font-size:11px;color:#8c8275"><span>METHOD</span><span>{{ wMethodName }}</span></div>
+              <div style="font-family:'Space Mono',monospace;font-size:9.5px;color:#8c8275;margin-top:11px;padding-top:11px;border-top:1px solid rgba(27,25,22,0.08)">A tax receipt has been emailed to jane@email.com</div>
+            </div>
+            <button onClick="{{ wReset }}" style="margin:24px auto 0;background:#1b1916;color:#f3eee4;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.04em;padding:15px 36px;border-radius:14px;font-weight:700">GIVE AGAIN</button>
+          </div>
+        </sc-if>
+      </div>
+
+    </div>
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1820,&quot;height&quot;:960},&quot;campaign&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Building Fund · New Sanctuary&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Campaign&quot;},&quot;showRaised&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Campaign&quot;},&quot;goalRaised&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:142800,&quot;min&quot;:0,&quot;max&quot;:1000000,&quot;step&quot;:1000,&quot;unit&quot;:&quot;$&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Campaign&quot;},&quot;goalTarget&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:300000,&quot;min&quot;:10000,&quot;max&quot;:2000000,&quot;step&quot;:10000,&quot;unit&quot;:&quot;$&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Campaign&quot;}}">
+class Component extends DCLogic {
+  state = {
+    mTab:'give', mStep:1, mFund:'tithe', mAmount:'100', mFreq:'once', mMethod:'interac', mCover:false,
+    wFund:'building', wAmount:'150', wFreq:'monthly', wMethod:'interac', wCover:true, wDone:false,
+    recurPaused:false,
+    rem:{ weekly:true, before:true, taxYear:true, appeals:false }
+  };
+
+  C={ cream:'#f3eee4', card:'#fffdf8', ink:'#1b1916', red:'#b5342a', gold:'#b0883a', dgold:'#80591a', muted:'#8c8275', line:'rgba(27,25,22,0.12)' };
+
+  FUNDS=[
+    {id:'tithe', name:'Tithe & Offering', desc:'General fund'},
+    {id:'building', name:'Building Fund', desc:'New sanctuary'},
+    {id:'missions', name:'Missions', desc:'Global outreach'},
+    {id:'benevolence', name:'Benevolence', desc:'Care & relief'}
+  ];
+  FREQS=[ {id:'once',label:'One-time'}, {id:'weekly',label:'Weekly'}, {id:'biweekly',label:'Bi-weekly'}, {id:'monthly',label:'Monthly'} ];
+  METHODS=[
+    {id:'interac', name:'Interac e-Transfer', sub:'From any Canadian bank', badge:'⇄', accent:'#ee2e24'},
+    {id:'paypal', name:'PayPal', sub:'Pay with your PayPal balance', badge:'P', accent:'#0070ba'},
+    {id:'card', name:'Credit or Debit Card', sub:'Visa · Mastercard · Amex', badge:'C', accent:'#1b1916'},
+    {id:'apple', name:'Apple Pay', sub:'One-tap with Face ID', badge:'', accent:'#1b1916'},
+    {id:'bank', name:'Pre-authorized Debit', sub:'Direct from your account', badge:'B', accent:'#80591a'}
+  ];
+
+  fmt(n){ n=Number(n)||0; return '$'+n.toLocaleString('en-CA',{minimumFractionDigits:(n%1?2:0),maximumFractionDigits:2}); }
+  set(f,v){ this.setState({[f]:v}); }
+
+  pad(d){
+    let a=this.state.mAmount||'';
+    if(d==='del'){ a=a.slice(0,-1); }
+    else if(d==='.'){ if(!a.includes('.')) a=(a||'0')+'.'; }
+    else { if(a==='0') a=''; if((a.split('.')[1]||'').length>=2) return; if(a.replace('.','').length>=8) return; a=a+d; }
+    this.setState({mAmount:a});
+  }
+
+  fund(id){ return this.FUNDS.find(f=>f.id===id)||{}; }
+  method(id){ return this.METHODS.find(m=>m.id===id)||{}; }
+  freq(id){ return this.FREQS.find(f=>f.id===id)||{}; }
+  fee(amt, on){ return on ? Math.round((amt*0.029+0.30)*100)/100 : 0; }
+  freqNote(id){ return id==='once' ? 'once' : 'every '+this.freq(id).label.toLowerCase().replace('-',' '); }
+
+  buildFunds(sel, pick){
+    const {ink,cream,line,muted}=this.C;
+    return this.FUNDS.map(f=>{ const s=f.id===sel; return {
+      ...f, selected:s, onClick:()=>pick(f.id),
+      style:`flex-shrink:0;cursor:pointer;padding:12px 15px;border-radius:14px;border:1.5px solid ${s?ink:line};background:${s?ink:'transparent'};transition:all .15s`,
+      nameStyle:`font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:14px;white-space:nowrap;color:${s?cream:ink}`,
+      descStyle:`font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.06em;text-transform:uppercase;margin-top:3px;color:${s?'rgba(243,238,228,0.6)':muted}`
+    }; });
+  }
+  buildFreqs(sel, pick){
+    const {ink,card,muted}=this.C;
+    return this.FREQS.map(f=>{ const s=f.id===sel; return {
+      ...f, onClick:()=>pick(f.id),
+      style:`flex:1;cursor:pointer;padding:10px 4px;border-radius:10px;font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:0.02em;background:${s?card:'transparent'};color:${s?ink:muted};box-shadow:${s?'0 1px 5px rgba(27,25,22,0.14)':'none'};font-weight:${s?700:400}`
+    }; });
+  }
+  buildMethods(sel, pick, web){
+    const {red,card,line}=this.C;
+    return this.METHODS.map(m=>{ const s=m.id===sel; return {
+      ...m, selected:s, onClick:()=>pick(m.id),
+      badge: m.id==='apple' ? '\uF8FF' : m.badge,
+      cardStyle:`display:flex;align-items:center;gap:13px;cursor:pointer;padding:${web?'13px 14px':'14px 16px'};border-radius:15px;background:${s?'#fff':card};border:1.5px solid ${s?red:line};transition:all .15s`,
+      badgeStyle:`flex-shrink:0;width:${web?34:40}px;height:${web?34:40}px;border-radius:10px;background:${m.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:${m.id==='apple'?18:16}px`,
+      radioStyle:`flex-shrink:0;width:22px;height:22px;border-radius:99px;border:2px solid ${s?red:'rgba(27,25,22,0.25)'};display:flex;align-items:center;justify-content:center`
+    }; });
+  }
+  buildPresets(sel, pick){
+    const {ink,line,muted}=this.C;
+    return [25,50,100,250].map(v=>{ const s=String(v)===String(sel); return {
+      label:'$'+v, onClick:()=>pick(String(v)),
+      style:`flex:1;cursor:pointer;padding:11px 4px;border-radius:11px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:15px;border:1.5px solid ${s?ink:line};background:${s?ink:'transparent'};color:${s?'#f3eee4':muted}`
+    }; });
+  }
+  track(on){ return `flex-shrink:0;width:46px;height:27px;border-radius:99px;padding:3px;background:${on?this.C.red:'#d3cabb'};display:flex;transition:all .18s;justify-content:${on?'flex-end':'flex-start'}`; }
+  knob(){ return 'width:21px;height:21px;border-radius:99px;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.2)'; }
+
+  renderVals(){
+    const S=this.state, C=this.C;
+    const campaign=this.props.campaign ?? 'Building Fund · New Sanctuary';
+    const goalRaised=this.props.goalRaised ?? 142800;
+    const goalTarget=this.props.goalTarget ?? 300000;
+    const goalPct=Math.round(goalRaised/goalTarget*100);
+    const showRaised=this.props.showRaised ?? true;
+
+    // mobile give
+    const mAmt=parseFloat(S.mAmount)||0;
+    const mFeeNum=this.fee(mAmt, S.mCover);
+    const mTotal=mAmt+mFeeNum;
+    const mFundName=this.fund(S.mFund).name;
+    const mFreqLabel=this.freq(S.mFreq).label;
+    const mm=this.method(S.mMethod);
+    const isGive=S.mTab==='give';
+
+    // web give
+    const wAmt=parseFloat(S.wAmount)||0;
+    const wFeeNum=this.fee(wAmt, S.wCover);
+    const wTotal=wAmt+wFeeNum;
+
+    const dotOn=`width:22px;height:5px;border-radius:99px;background:${C.red}`;
+    const dotOff=`width:22px;height:5px;border-radius:99px;background:rgba(27,25,22,0.15)`;
+
+    const headerTitle = !isGive ? ({schedule:'Schedule',activity:'Your Giving',profile:'Profile'}[S.mTab])
+      : (S.mStep===1?'Give':S.mStep===2?'Payment':S.mStep===3?'Review':'Thank you');
+    const headerSub = !isGive ? ({schedule:'Recurring & reminders',activity:'2026 statement',profile:'Account settings'}[S.mTab])
+      : (S.mStep===1?'Step 1 of 3':S.mStep===2?'Step 2 of 3':S.mStep===3?'Step 3 of 3':'Gift received');
+
+    const reminders=[
+      {key:'weekly', label:'Weekly giving reminder', sub:'Every Sunday morning'},
+      {key:'before', label:'Before scheduled gift', sub:'1 day before each recurring gift'},
+      {key:'taxYear', label:'Year-end tax receipt', sub:'When your annual receipt is ready'},
+      {key:'appeals', label:'Special appeals', sub:'Occasional building & missions updates'}
+    ].map((r,i,arr)=>({ ...r, on:S.rem[r.key],
+      toggle:()=>this.setState(st=>({rem:{...st.rem,[r.key]:!st.rem[r.key]}})),
+      rowStyle:`display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;${i<arr.length-1?'border-bottom:1px solid rgba(27,25,22,0.07)':''}`,
+      trackStyle:this.track(S.rem[r.key]), knobStyle:this.knob() }));
+
+    const txns=[
+      {date:'Jun 22, 2026', fund:'Tithe & Offering', method:'Interac', amount:'$100', status:'Completed'},
+      {date:'Jun 15, 2026', fund:'Building Fund', method:'PayPal', amount:'$250', status:'Completed'},
+      {date:'Jun 1, 2026', fund:'Tithe & Offering', method:'Pre-auth Debit', amount:'$100', status:'Completed'},
+      {date:'May 25, 2026', fund:'Missions', method:'Credit Card', amount:'$75', status:'Completed'},
+      {date:'May 18, 2026', fund:'Tithe & Offering', method:'Interac', amount:'$100', status:'Completed'}
+    ];
+
+    const saved=[
+      {badge:'⇄', accent:'#ee2e24', name:'Interac · RBC', sub:'jane@email.com', def:true},
+      {badge:'P', accent:'#0070ba', name:'PayPal', sub:'jane.doe@email.com', def:false},
+      {badge:'C', accent:'#1b1916', name:'Visa ···· 4242', sub:'Expires 09/28', def:false}
+    ].map(s=>({ ...s, badgeStyle:`flex-shrink:0;width:38px;height:38px;border-radius:10px;background:${s.accent};color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:15px` }));
+
+    const menu=[
+      {label:'Personal information'}, {label:'Tax receipts'}, {label:'Notification preferences'},
+      {label:'Help & support'}, {label:'Sign out', color:C.red}
+    ].map(i=>({ ...i, color:i.color||C.ink }));
+
+    return {
+      campaign, goalPct, showRaised, goalRaisedStr:this.fmt(goalRaised), goalTargetStr:this.fmt(goalTarget), goalDonors:'214',
+      chromeProps:{ width:1200, height:760, url:'thejesusexperience.ca/give', dark:false },
+
+      // nav
+      navGive: isGive?C.red:C.muted, navSchedule:S.mTab==='schedule'?C.red:C.muted,
+      navActivity:S.mTab==='activity'?C.red:C.muted, navProfile:S.mTab==='profile'?C.red:C.muted,
+      goGive:()=>this.setState({mTab:'give'}), goSchedule:()=>this.set('mTab','schedule'),
+      goActivity:()=>this.set('mTab','activity'), goProfile:()=>this.set('mTab','profile'),
+
+      // tab flags
+      isSchedule:S.mTab==='schedule', isActivity:S.mTab==='activity', isProfile:S.mTab==='profile',
+      giveFlow: isGive && S.mStep!=='done',
+      gStep1: isGive && S.mStep===1, gStep2: isGive && S.mStep===2, gStep3: isGive && S.mStep===3, gDone: isGive && S.mStep==='done',
+      mHeaderTitle:headerTitle, mHeaderSub:headerSub,
+      dot1:dotOn, dot2:(S.mStep>=2?dotOn:dotOff), dot3:(S.mStep>=3?dotOn:dotOff),
+
+      // give step 1
+      mFunds:this.buildFunds(S.mFund, id=>this.set('mFund',id)),
+      mFreqs:this.buildFreqs(S.mFreq, id=>this.set('mFreq',id)),
+      mPresets:this.buildPresets(S.mAmount, v=>this.set('mAmount',v)),
+      mAmountBig:'$'+(S.mAmount||'0'),
+      keys:['1','2','3','4','5','6','7','8','9','.','0','del'].map(d=>({ label:d==='del'?'⌫':d, on:()=>this.pad(d) })),
+      mGiveSummary:this.fmt(mAmt),
+      mNext:()=>this.setState(st=>({mStep:st.mStep+1})),
+      mBack:()=>this.setState(st=>({mStep:st.mStep-1})),
+
+      // give step 2
+      mMethods:this.buildMethods(S.mMethod, id=>this.set('mMethod',id), false),
+
+      // give step 3
+      mFundName, mFreqLabel, mMethodName:mm.name,
+      toggleMCover:()=>this.set('mCover',!S.mCover),
+      mCoverTrack:this.track(S.mCover), mCoverKnob:this.knob(),
+      mFeeStr:this.fmt(this.fee(mAmt,true)),
+      mFreqNote:this.freqNote(S.mFreq),
+      mTotalStr:this.fmt(mTotal),
+      mGive:()=>this.setState({mStep:'done'}),
+
+      // success
+      mReset:()=>this.setState({mStep:1}),
+      mReceiptId:'#JE-'+(8400+Math.floor(mAmt)),
+      mIsRecurring:S.mFreq!=='once',
+      mNextDate:'Jul 1, 2026',
+
+      // schedule
+      recurPaused:S.recurPaused,
+      recurStatus:S.recurPaused?'PAUSED':'ACTIVE',
+      recurAction:S.recurPaused?'RESUME':'PAUSE',
+      recurNext:S.recurPaused?'—':'JUL 1, 2026',
+      recurPillStyle:`font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.08em;padding:4px 10px;border-radius:99px;background:${S.recurPaused?'rgba(243,238,228,0.12)':'rgba(63,125,82,0.25)'};color:${S.recurPaused?'#9a9082':'#7fc99a'}`,
+      toggleRecur:()=>this.set('recurPaused',!S.recurPaused),
+      reminders,
+
+      // activity / profile
+      txns, saved, menu,
+
+      // ===== WEB =====
+      wForm:!S.wDone, wDone:S.wDone,
+      wFunds:this.buildFunds(S.wFund, id=>this.set('wFund',id)),
+      wFreqs:this.buildFreqs(S.wFreq, id=>this.set('wFreq',id)),
+      wMethods:this.buildMethods(S.wMethod, id=>this.set('wMethod',id), true),
+      wPresets:this.buildPresets(S.wAmount, v=>this.set('wAmount',v)),
+      wAmount:S.wAmount,
+      wSetAmount:(e)=>this.set('wAmount', e.target.value.replace(/[^0-9.]/g,'')),
+      toggleWCover:()=>this.set('wCover',!S.wCover),
+      wCoverTrack:this.track(S.wCover), wCoverKnob:this.knob(),
+      wFeeStr:this.fmt(this.fee(wAmt,true)),
+      wTotalStr:this.fmt(wTotal),
+      wFreqNote:this.freqNote(S.wFreq),
+      wFundName:this.fund(S.wFund).name,
+      wMethodName:this.method(S.wMethod).name,
+      wGive:()=>this.set('wDone',true),
+      wReset:()=>this.set('wDone',false)
+    };
+  }
+}
+</script>
+</body>
+</html>
