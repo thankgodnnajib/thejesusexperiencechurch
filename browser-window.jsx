@@ -102,10 +102,32 @@ function ChromeToolbar({ url = 'example.com' }) {
 
 function ChromeWindow({
   tabs = [{ title: 'New Tab' }], activeIndex = 0, url = 'example.com',
-  width = 900, height = 600, children,
+  width = 900, height = 600, children, frameless = false,
 }) {
+  if (frameless) {
+    return (
+      <div
+        className="chrome-window chrome-window--frameless"
+        style={{
+          width: '100%',
+          minHeight: '100dvh',
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
+          background: '#fff',
+        }}
+      >
+        <div style={{ flex: 1, background: '#fff', overflow: 'auto' }}>
+          {children}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={{
+    <div
+      className="chrome-window"
+      style={{
       width, height, borderRadius: 10, overflow: 'hidden',
       boxShadow: '0 24px 80px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.1)',
       display: 'flex', flexDirection: 'column', background: CHROME_C.tabBg,

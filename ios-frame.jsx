@@ -200,10 +200,36 @@ function IOSList({ header, children, dark = false }) {
 // ─────────────────────────────────────────────────────────────
 function IOSDevice({
   children, width = 402, height = 874, dark = false,
-  title, keyboard = false,
+  title, keyboard = false, frameless = false,
 }) {
+  if (frameless) {
+    return (
+      <div
+        className="ios-device ios-device--frameless"
+        style={{
+          width: '100%',
+          height: '100%',
+          minHeight: '100dvh',
+          overflow: 'hidden',
+          position: 'relative',
+          background: dark ? '#000' : '#F2F2F7',
+          fontFamily: '-apple-system, system-ui, sans-serif',
+          WebkitFontSmoothing: 'antialiased',
+        }}
+      >
+        <div style={{ height: '100%', minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
+          {title !== undefined && <IOSNavBar title={title} dark={dark} />}
+          <div style={{ flex: 1, overflow: 'auto' }}>{children}</div>
+          {keyboard && <IOSKeyboard dark={dark} />}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div style={{
+    <div
+      className="ios-device"
+      style={{
       width, height, borderRadius: 48, overflow: 'hidden',
       position: 'relative', background: dark ? '#000' : '#F2F2F7',
       boxShadow: '0 40px 80px rgba(0,0,0,0.18), 0 0 0 1px rgba(0,0,0,0.12)',

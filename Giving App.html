@@ -11,25 +11,56 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<meta name="design_doc_mode" content="canvas">
 <style>
   *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#ece4d4;min-height:100%;}
   button{font-family:inherit;border:none;background:none;cursor:pointer}
   input{font-family:inherit}
+  img{max-width:100%;height:auto}
   ::-webkit-scrollbar{width:0;height:0}
   @keyframes jxUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
   .jxscreen{animation:jxUp .32s ease both}
+
+  [data-screen-label]{display:none!important}
+  .jx-give-page{min-height:100dvh}
+  .jx-mobile-frame,.jx-desktop-frame{position:relative!important;left:auto!important;top:auto!important;width:100%!important;margin:0;padding:0}
+  .jx-web-give{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    min-height:100dvh;
+    height:auto!important;
+    font-family:'Newsreader',Georgia,serif;
+    color:#1b1916;
+  }
+  .jx-web-panel-left{padding:clamp(28px,5vw,54px) clamp(22px,4vw,56px)!important}
+  .jx-web-panel-right{padding:clamp(28px,4vw,48px) clamp(20px,4vw,52px)!important;overflow:auto}
+
+  @media (max-width:899px){
+    .jx-desktop-frame{display:none!important}
+    .jx-mobile-frame{display:block;max-width:480px;margin:0 auto;min-height:100dvh}
+  }
+
+  @media (min-width:900px){
+    body{background:#1b1916}
+    .jx-mobile-frame{display:none!important}
+    .jx-desktop-frame{display:block;max-width:1200px;margin:0 auto;min-height:100dvh}
+  }
+
+  @media (max-width:1100px) and (min-width:900px){
+    .jx-web-give{grid-template-columns:1fr}
+  }
 </style>
 </helmet>
 
 <!-- ============ MOBILE APP FRAME ============ -->
-<div style="position:absolute;left:60px;top:48px;width:402px">
+<div class="jx-give-page">
+<div class="jx-mobile-frame">
   <div data-drags-parent="1" data-screen-label="Mobile app" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.16em;color:#6b6358;text-transform:uppercase;margin-bottom:14px">The Jesus Experience — Mobile Giving App</div>
-  <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+  <x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" dc-props="{{ iosProps }}" hint-size="402px,874px">
     <div style="display:flex;flex-direction:column;height:100%;background:#f3eee4;font-family:'Newsreader',Georgia,serif;color:#1b1916">
 
       <!-- header -->
-      <div style="padding:58px 20px 12px;background:#f3eee4;flex-shrink:0">
+      <div style="padding:20px 20px 12px;background:#f3eee4;flex-shrink:0">
         <img src="assets/logo.png" style="height:19px;display:block" alt="The Jesus Experience Church">
         <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px">
           <h1 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:30px;letter-spacing:-0.02em;line-height:1">{{ mHeaderTitle }}</h1>
@@ -316,7 +347,7 @@
       </div>
 
       <!-- bottom tab bar -->
-      <div style="flex-shrink:0;background:#fffdf8;border-top:1px solid rgba(27,25,22,0.1);display:flex;padding:9px 8px 26px">
+      <div style="flex-shrink:0;background:#fffdf8;border-top:1px solid rgba(27,25,22,0.1);display:flex;padding:9px 8px max(12px, env(safe-area-inset-bottom))">
         <button onClick="{{ goGive }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;color:{{ navGive }}">
           <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.5-1.5 3-3.4 3-5.5a3.5 3.5 0 00-6.4-2A3.5 3.5 0 009.2 4 3.5 3.5 0 003 6.5c0 2.1 1.5 4 3 5.5l6 6z"/></svg>
           <span style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.04em">Give</span>
@@ -340,15 +371,15 @@
 </div>
 
 <!-- ============ WEB GIVING PAGE FRAME ============ -->
-<div style="position:absolute;left:540px;top:48px;width:1200px">
+<div class="jx-desktop-frame">
   <div data-drags-parent="1" data-screen-label="Web giving page" style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:0.16em;color:#6b6358;text-transform:uppercase;margin-bottom:14px">The Jesus Experience — Web Giving Page</div>
   <x-import component-from-global-scope="ChromeWindow" from="./browser-window.jsx" dc-props="{{ chromeProps }}" hint-size="1200px,760px">
-    <div style="display:grid;grid-template-columns:1fr 1fr;height:760px;font-family:'Newsreader',Georgia,serif;color:#1b1916">
+    <div class="jx-web-give">
 
       <!-- left dark panel -->
-      <div style="background:#1b1916;color:#f3eee4;padding:54px 56px;position:relative;overflow:hidden">
+      <div class="jx-web-panel-left" style="background:#1b1916;color:#f3eee4;padding:54px 56px;position:relative;overflow:hidden">
         <div style="position:absolute;inset:0;background:radial-gradient(110% 80% at 90% 0%,rgba(176,136,58,0.2),transparent 55%)"></div>
-        <div style="position:relative;height:100%;display:flex;flex-direction:column">
+        <div style="position:relative;min-height:100%;display:flex;flex-direction:column">
           <img src="assets/logo-light.png" style="height:30px;align-self:flex-start" alt="The Jesus Experience Church">
           <div style="margin-top:auto">
             <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:0.24em;color:#b0883a">GENEROSITY · WORSHIP · LEGACY</div>
@@ -374,7 +405,7 @@
       </div>
 
       <!-- right form panel -->
-      <div style="background:#f3eee4;padding:48px 52px;overflow:auto">
+      <div class="jx-web-panel-right" style="background:#f3eee4;padding:48px 52px;overflow:auto">
         <sc-if value="{{ wForm }}" hint-placeholder-val="{{ true }}">
           <div>
             <h1 style="font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:32px;letter-spacing:-0.02em">Give online</h1>
@@ -447,6 +478,7 @@
 
     </div>
   </x-import>
+</div>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1820,&quot;height&quot;:960},&quot;campaign&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Building Fund · New Sanctuary&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Campaign&quot;},&quot;showRaised&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Campaign&quot;},&quot;goalRaised&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:142800,&quot;min&quot;:0,&quot;max&quot;:1000000,&quot;step&quot;:1000,&quot;unit&quot;:&quot;$&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Campaign&quot;},&quot;goalTarget&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:300000,&quot;min&quot;:10000,&quot;max&quot;:2000000,&quot;step&quot;:10000,&quot;unit&quot;:&quot;$&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Campaign&quot;}}">
@@ -589,7 +621,8 @@ class Component extends DCLogic {
 
     return {
       campaign, goalPct, showRaised, goalRaisedStr:this.fmt(goalRaised), goalTargetStr:this.fmt(goalTarget), goalDonors:'214',
-      chromeProps:{ width:1200, height:760, url:'thejesusexperience.ca/give', dark:false },
+      iosProps:{ frameless:true },
+      chromeProps:{ frameless:true, width:1200, height:760, url:'thejesusexperience.ca/give', dark:false },
 
       // nav
       navGive: isGive?C.red:C.muted, navSchedule:S.mTab==='schedule'?C.red:C.muted,
